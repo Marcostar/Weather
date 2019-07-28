@@ -1,4 +1,17 @@
 <resources>
     <string name="app_name">Weather</string>
     <string name="action_settings">Settings</string>
+    <string name="weather_permission_dialog_message">App needs your location access to show you weather details</string>
+    <string name="weather_dialog_title">Allow Location Access</string>
+    <string name="ok">Ok</string>
+
+
+    //SharedPreferenceValues
+    <!--<string name="PREF_NAME">"com.example.weather"</string>-->
+    <!--<string name="ROW_ID">row_id</string>-->
+    <!--<string name="LATITUDE">latitude</string>-->
+    <!--<string name="LONGITUDE">longitude</string>-->
+    <!--<string name="INSERTION_TIME">insertion_time</string>-->
+
+
 </resources>
