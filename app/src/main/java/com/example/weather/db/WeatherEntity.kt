@@ -13,11 +13,15 @@ import com.example.weather.typeConverters.CurrentlyTypeConverters
 import com.example.weather.typeConverters.DailyTypeConverters
 import com.example.weather.typeConverters.HourlyTypeConverters
 
+const val WEATHER_ID = 0
+
 @Entity(tableName = "Weather")
-data class WeatherEntity(@PrimaryKey @NonNull @ColumnInfo(name = "UID") val uid: Int,
-                         @ColumnInfo(name = "currently_data") @TypeConverters(CurrentlyTypeConverters::class) var currently: Currently,
+data class WeatherEntity(@ColumnInfo(name = "currently_data") @TypeConverters(CurrentlyTypeConverters::class) var currently: Currently,
                          @ColumnInfo(name = "daily_data") @TypeConverters(DailyTypeConverters::class) var daily: List<DailyData>,
-                         @ColumnInfo(name = "hourly_data") @TypeConverters(HourlyTypeConverters::class) var hourly: List<HourlyData>)
+                         @ColumnInfo(name = "hourly_data") @TypeConverters(HourlyTypeConverters::class) var hourly: List<HourlyData>){
+    @PrimaryKey(autoGenerate = false)
+    var id: Int = WEATHER_ID
+}
 
 
 

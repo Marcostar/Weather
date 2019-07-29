@@ -1,4 +1,4 @@
 package com.example.weather.model
 
 
-data class DailyData(var icon: String,var temperatureHigh: Double,var temperatureLow: Double)
+data class DailyData(var icon: String,var temperatureHigh: Double,var temperatureLow: Double, var time: Long)

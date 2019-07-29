@@ -10,12 +10,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.weather.UI.DailyAdapter
+import com.example.weather.UI.HourlyAdapter
+import com.example.weather.db.WeatherEntity
+import com.example.weather.model.Weather
+import com.example.weather.viewModel.WeatherRepo
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var weatherRepo: WeatherRepo
 
     private val MY_PERMISSIONS_REQUEST_COARSE_LOCATION: Int = 23
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -25,15 +37,32 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
+
+        val hourlyRecyclerView = findViewById<RecyclerView>(R.id.hourlyRecyclerView)
+        val adapter = HourlyAdapter(this)
+        hourlyRecyclerView.adapter = adapter
+        hourlyRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+
+
+        val dailyRecyclerView = findViewById<RecyclerView>(R.id.dailyRecyclerView)
+        val dailyAdapter = DailyAdapter(this)
+        dailyRecyclerView.adapter = dailyAdapter
+        dailyRecyclerView.layoutManager = LinearLayoutManager(this)
+
+
         //setup location client
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
 
-       getLocation()
+        weatherRepo = ViewModelProviders.of(this).get(WeatherRepo::class.java)
 
+        weatherRepo.weatherData.observe(this, Observer { weatherEntity -> weatherEntity?.let { adapter.setData(weatherEntity.hourly)
+        dailyAdapter.setData(weatherEntity.daily)}  })
 
-        //get insertion timelimit
-//        val currentTimestamp = System.currentTimeMillis()
+        getLocation()
+
+        val data:LiveData<WeatherEntity> = weatherRepo.getWeatherData(prefs.latitude, prefs.longitude)
+        Log.d("MainActivity",""+data.value)
 
 
     }
@@ -125,27 +154,6 @@ class MainActivity : AppCompatActivity() {
                 }
                 return
             }
-
-            // Add other 'when' lines to check for other
-            // permissions this app might request.
-            else -> {
-                // Ignore all other requests.
-            }
         }
     }
-//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        menuInflater.inflate(R.menu.menu_main, menu)
-//        return true
-//    }
-//
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        return when (item.itemId) {
-//            R.id.action_settings -> true
-//            else -> super.onOptionsItemSelected(item)
-//        }
-//    }
 }
